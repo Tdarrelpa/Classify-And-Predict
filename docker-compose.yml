@@ -8,7 +8,7 @@ services:
       - ./predictions.csv:/app/predictions.csv # Store the prediction result
     build:
       context: .
-      dockerfile: DOCKERFILE
+      # dockerfile: DOCKERFILE <- test if the build file can read without this
     image: tdarrelpa/nbm-classify-and-predict:latest
     container_name: python-classify-and-predict
     command: python Simple-Naive-Bayes-Multinomial.py
