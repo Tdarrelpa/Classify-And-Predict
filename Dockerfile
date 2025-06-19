@@ -8,17 +8,23 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Clone cl-tuples, cl-csv, cl-ppcre, parse-number, and split-sequence into a fixed directory 
-# as all of this is SBCL external library, not built-in
+# as all of this is SBCL external library, not built-in.
 RUN mkdir -p /opt/lisp-libs \
-    && git clone https://github.com/AccelerationNet/cl-csv /opt/lisp-libs/cl-csv
-    && git clone https://repo.or.cz/cl-tuples.git /opt/lisp-libs/cl-tuples
-    && git clone https://github.com/edicl/cl-ppcre /opt/lisp-libs/cl-ppcre
-    && git clone https://github.com/sharplispers/parse-number.git /opt/lisp-libs/parse-number
+    && git clone https://github.com/AccelerationNet/cl-csv /opt/lisp-libs/cl-csv \
+    && git clone https://repo.or.cz/cl-tuples.git /opt/lisp-libs/cl-tuples \
+    && git clone https://github.com/edicl/cl-ppcre /opt/lisp-libs/cl-ppcre \
+    && git clone https://github.com/sharplispers/parse-number.git /opt/lisp-libs/parse-number \
     && git clone https://github.com/sharplispers/split-sequence.git /opt/lisp-libs/split-sequence
 
-# Register cl-tuples with ASDF permanently
-RUN printf "(push #p\"/opt/lisp-libs/cl-tuples/\" asdf:*central-registry*)\n" \
+# Register all of the library above with ASDF permanently
+RUN printf "(push #p\"/opt/lisp-libs/cl-csv/\" asdf:*central-registry*)\n" \
+    && printf "(push #p\"/opt/lisp-libs/cl-tuples/\" asdf:*central-registry*)\n" \
+    && printf "(push #p\"/opt/lisp-libs/cl-ppcre/\" asdf:*central-registry*)\n" \
+    && printf "(push #p\"/opt/lisp-libs/parse-number/\" asdf:*central-registry*)\n" \
+    && printf "(push #p\"/opt/lisp-libs/split-sequence/\" asdf:*central-registry*)\n" \
          >> /etc/sbclrc
+
+# The library above needed for Common Lisp file that's executed in GitHub workflow, hope this isn't messed up now
 
 WORKDIR /app
 

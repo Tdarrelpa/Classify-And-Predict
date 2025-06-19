@@ -36,4 +36,4 @@ jobs:
         if: failure()
         run: |
           # nama container sesuai dengan docker-compose.yml kamu
-          docker logs python-classify-and-predict || true
+          docker logs common-lisp-classify-and-predict || true
