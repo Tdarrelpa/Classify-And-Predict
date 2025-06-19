@@ -4,7 +4,7 @@ ENV VIRTUAL_ENV=/opt/venv
 WORKDIR /
 
 COPY Simple-Naive-Bayes-Multinomial.py /
-COPY dataClickId/
+COPY dataClickId/ /dataClickId/
 COPY combined_clickid.csv /
 COPY naive_bayes_model.csv /
 COPY predictions.csv /
