@@ -1,0 +1,5 @@
+*.fasl
+*.dfsl
+*.pfsl
+*.lx32fsl
+*.lx64fsl
