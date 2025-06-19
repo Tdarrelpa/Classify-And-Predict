@@ -2,7 +2,7 @@ services:
   naive-bayes-model:
     working_dir: /app
     volumes:
-      - ./Simple-Naive-Bayes-Multinomial.py:/app/Simple-Naive-Bayes-Multinomial.py
+      - ./app/Simple-Naive-Bayes-Multinomial.py:/app/Simple-Naive-Bayes-Multinomial.py
       - ./combined_clickid.csv:/app/combined_clickid.csv # Store the combined CSV
       - ./naive_bayes_model.csv:/app/naive_bayes_model.csv # store the Naive Bayes result
       - ./predictions.csv:/app/predictions.csv # Store the prediction result
