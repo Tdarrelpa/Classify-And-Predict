@@ -8,7 +8,6 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Clone cl-tuples, cl-csv, cl-ppcre, parse-number, and split-sequence into a fixed directory 
-# as all of this is SBCL external library, not built-in.
 RUN mkdir -p /opt/lisp-libs \
     && git clone https://github.com/AccelerationNet/cl-csv /opt/lisp-libs/cl-csv \
     && git clone https://repo.or.cz/cl-tuples.git /opt/lisp-libs/cl-tuples \
@@ -16,15 +15,10 @@ RUN mkdir -p /opt/lisp-libs \
     && git clone https://github.com/sharplispers/parse-number.git /opt/lisp-libs/parse-number \
     && git clone https://github.com/sharplispers/split-sequence.git /opt/lisp-libs/split-sequence
 
-# Register all of the library above with ASDF permanently
-RUN printf "(push #p\"/opt/lisp-libs/cl-csv/\" asdf:*central-registry*)\n" \
-    && printf "(push #p\"/opt/lisp-libs/cl-tuples/\" asdf:*central-registry*)\n" \
-    && printf "(push #p\"/opt/lisp-libs/cl-ppcre/\" asdf:*central-registry*)\n" \
-    && printf "(push #p\"/opt/lisp-libs/parse-number/\" asdf:*central-registry*)\n" \
-    && printf "(push #p\"/opt/lisp-libs/split-sequence/\" asdf:*central-registry*)\n" \
-         >> /etc/sbclrc
-
-# The library above needed for Common Lisp file that's executed in GitHub workflow, hope this isn't messed up now
+# Remove this block:
+# RUN printf "(push #p\"/opt/lisp-libs/cl-csv/\" asdf:*central-registry*)\n" \
+#     ... more lines ...
+#     >> /etc/sbclrc
 
 WORKDIR /app
 
@@ -33,13 +27,18 @@ COPY app/ /app/
 
 # Preload necessary systems and dump core for fast startup
 RUN sbcl --non-interactive \
-    # --load /etc/sbclrc \ <- it did produce an error, have to commented out
-    --eval '(asdf:load-system :cl-csv)' \
-    --eval '(asdf:load-system :cl-tuples)' \
-    --eval '(asdf:load-system :cl-ppcre)' \
-    --eval '(asdf:load-system :parse-number)' \
-    --eval '(asdf:load-system :split-sequence)' \
-    # --eval '(sb-ext:save-lisp-and-die \"app.core\" :executable t :toplevel #'(lambda () (in-package :x) (uiop:quit))''
+    --eval "(progn \
+        (push #p\"/opt/lisp-libs/cl-csv/\" asdf:*central-registry*) \
+        (push #p\"/opt/lisp-libs/cl-tuples/\" asdf:*central-registry*) \
+        (push #p\"/opt/lisp-libs/cl-ppcre/\" asdf:*central-registry*) \
+        (push #p\"/opt/lisp-libs/parse-number/\" asdf:*central-registry*) \
+        (push #p\"/opt/lisp-libs/split-sequence/\" asdf:*central-registry*) \
+        (asdf:load-system :cl-csv) \
+        (asdf:load-system :cl-tuples) \
+        (asdf:load-system :cl-ppcre) \
+        (asdf:load-system :parse-number) \
+        (asdf:load-system :split-sequence))"
+    # --eval '(sb-ext:save-lisp-and-die "app.core" :executable t :toplevel #'(lambda () (in-package :x) (uiop:quit)))'
 
 # Launch your saved core binary
 # CMD ["./app.core"]
