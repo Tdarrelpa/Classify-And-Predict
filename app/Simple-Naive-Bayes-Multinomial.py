@@ -157,7 +157,7 @@ def loadModel(modelFile):
                 wordProbabilities[row[1]] = {}
             wordProbabilities[row[1]][row[0]] = float(row[2])
     print(f"Membaca model Naive Bayes di {modelFile}")
-    return class_probabilities, wordProbabilities
+    return classProbabilities, wordProbabilities
 
 # Menyimpan prediksi
 def savePredictions(predictions, outputFile):
