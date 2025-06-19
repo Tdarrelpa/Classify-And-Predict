@@ -1,0 +1,41 @@
+steps:
+  - name: build-and-run
+    image: docker:latest
+    environment:
+      DOCKER_HOST: tcp://docker:2376
+      DOCKER_TLS_CERTDIR: "/certs"
+      DOCKER_TLS_VERIFY: "1"
+      DOCKER_CERT_PATH: "/certs/client"
+    volumes:
+      - /opt/woodpeckerci/dind-certs/client:/certs/client:ro
+    commands:
+      - apk add --no-cache docker-compose
+      - docker-compose up --build --abort-on-container-exit
+    when:
+      - event: push
+      - event: pull_request
+
+  - name: show-logs-on-failure
+    image: docker:latest
+    environment:
+      DOCKER_HOST: tcp://docker:2376
+      DOCKER_TLS_VERIFY: "1"
+      DOCKER_CERT_PATH: "/certs/client"
+    volumes:
+      - /opt/woodpeckerci/dind-certs/client:/certs/client:ro
+    commands:
+      - docker logs python-classify-and-predict || true
+    when:
+      - event: push
+        status: failure
+      - event: pull_request
+        status: failure
+
+services:
+  - name: docker
+    image: docker:dind
+    privileged: true
+    environment:
+      DOCKER_TLS_CERTDIR: "/certs"
+    volumes:
+      - /opt/woodpeckerci/dind-certs:/certs

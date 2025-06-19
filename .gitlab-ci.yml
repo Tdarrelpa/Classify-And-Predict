@@ -1,0 +1,28 @@
+stages:
+  - build-and-run
+
+variables:
+  DOCKER_HOST: tcp://docker:2376
+  DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_TLS_VERIFY: 1
+  DOCKER_CERT_PATH: "/certs/client"
+  DOCKER_DRIVER: overlay2
+
+build-and-run-job:
+  stage: build-and-run
+  image: docker:latest
+  services:
+    - docker:dind
+  # variables:
+  #   DOCKER_DRIVER: overlay2
+  #   DOCKER_TLS_CERTDIR: ""
+  rules:
+    - if: '$CI_COMMIT_BRANCH'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+  before_script:
+    - apk add --no-cache docker-compose
+  script:
+    - docker-compose up --build --abort-on-container-exit
+  after_script:
+    # Equivalent of 'if: failure()' — show logs if container name exists
+    - docker logs python-classify-and-predict || true
