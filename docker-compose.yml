@@ -7,8 +7,8 @@ services:
       - ./naive_bayes_model.csv:/app/naive_bayes_model.csv # store the Naive Bayes result
       - ./predictions.csv:/app/predictions.csv # Store the prediction result
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ./DOCKERFILE
+      dockerfile: DOCKERFILE
     image: tdarrelpa/nbm-classify-and-predict:latest
     container_name: python-classify-and-predict
     command: python Simple-Naive-Bayes-Multinomial.py
