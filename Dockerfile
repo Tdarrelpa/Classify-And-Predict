@@ -33,7 +33,7 @@ COPY app/ /app/
 
 # Preload necessary systems and dump core for fast startup
 RUN sbcl --non-interactive \
-    --load /etc/sbclrc \
+    # --load /etc/sbclrc \ <- it did produce an error, have to commented out
     --eval '(asdf:load-system :cl-csv)' \
     --eval '(asdf:load-system :cl-tuples)' \
     --eval '(asdf:load-system :cl-ppcre)' \
