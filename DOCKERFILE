@@ -1,0 +1,12 @@
+FROM python:3.12-slim
+
+ENV VIRTUAL_ENV=/opt/venv
+# WORKDIR /app
+
+# COPY app/ /app/
+CMD ["python", "Simple-Naive-Bayes-Multinomial.py"]
+
+# Labeling image
+LABEL maintainer="Timotius Darrel Putra Arma <darrel2208@gmail.com>"
+LABEL version="1.0"
+LABEL description="Simple (Built-in) and Complex (external) Naive Bayes Multinomial for classify and predict clickbait news"

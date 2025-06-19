@@ -1,0 +1,13 @@
+services:
+  reasoning-fuzzy:
+    # working_dir: /app
+    volumes:
+      - ./Simple-Naive-Bayes-Multinomial.py:/Simple-Naive-Bayes-Multinomial.py
+      - ./combined_clickid.csv:/combined_clickid.csv # Store the combined CSV
+      - ./naive_bayes_model.csv:/naive_bayes_model.csv # store the Naive Bayes result
+      - ./predictions.csv:/predictions.csv # Store the prediction result
+    build:
+      context: .
+    image: tdarrelpa/nbm-classify-and-predict:latest
+    container_name: python-classify-and-predict
+    command: python Simple-Naive-Bayes-Multinomial.py
