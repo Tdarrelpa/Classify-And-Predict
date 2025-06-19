@@ -11,4 +11,4 @@ services:
       context: .
     image: tdarrelpa/nbm-classify-and-predict:latest
     container_name: common-lisp-classify-and-predict
-    command: sbcl --load "/app/Simple-Naive-Bayes-Multinomial.lsp"
+    command: sbcl --load Simple-Naive-Bayes-Multinomial.lsp
